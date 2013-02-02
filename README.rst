@@ -19,7 +19,9 @@ Usage Guide
 Items
 =====
 
-Standard item definition::
+Standard item definition:
+
+.. code:: python
 
   from scrapy.item import Item, Field
 
@@ -30,7 +32,9 @@ Standard item definition::
       url = Field()
 
 
-Becomes::
+Becomes:
+
+.. code:: python
 
   from scrapy_boilerplate import ItemFactory
 
@@ -40,7 +44,9 @@ Becomes::
 BaseSpider
 ==========
 
-Standard spider definition::
+Standard spider definition:
+
+.. code:: python
 
   from scrapy.spider import BaseSpider
 
@@ -52,7 +58,9 @@ Standard spider definition::
           # do stuff
 
 
-Becomes::
+Becomes:
+
+.. code:: python
 
   from scrapy_boilerplate import spider_factory
 
@@ -64,7 +72,9 @@ Becomes::
 CrawlSpider
 ===========
 
-Standard spider definition::
+Standard spider definition:
+
+.. code:: python
 
   from scrapy.contrib.spiders import CrawlSpider, Rule
   from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
@@ -83,7 +93,9 @@ Standard spider definition::
           # do stuff
 
 
-Becomes::
+Becomes:
+
+.. code:: python
 
   from scrapy_boilerplate import NewCrawlSpider
 
@@ -98,8 +110,9 @@ Becomes::
 Running Helpers
 ===============
 
-Single-file spider::
+Single-file spider:
 
+.. code:: python
 
   # file: my-spider.py
   # imports omitted ...
@@ -119,8 +132,9 @@ Single-file spider::
       run_spider(spider, custom_settings)
 
 
-Single-file project with standard crawl command line options::
+Single-file project with standard crawl command line options:
 
+.. code:: python
 
   # file: my-crawler.py
   # imports omitted ...
