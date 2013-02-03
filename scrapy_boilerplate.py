@@ -215,16 +215,16 @@ NewCrawlSpider.__doc__ = """Create a new subclass of CrawlSpider.
     """
 
 
-def ItemFactory(names, base_cls=Item):
+def NewItem(names, base_cls=Item):
     """Creates an Item class with given fields specification.
 
     Usage::
 
-        BaseItem = ItemFactory('title body url')
+        BaseItem = NewItem('title body url')
 
-        QuestionItem = ItemFactory('tags status', base_cls=BaseItem)
+        QuestionItem = NewItem('tags status', base_cls=BaseItem)
 
-        AnswerItem = ItemFactory('user', base_cls=BaseItem)
+        AnswerItem = NewItem('user', base_cls=BaseItem)
 
     """
     if isinstance(names, basestring):
