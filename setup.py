@@ -1,10 +1,12 @@
+import os
 from setuptools import setup
 
-LONG_DESC = open('README.rst').read()
+LONG_DESC = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
+
 
 setup(
     name='scrapy-boilerplate',
-    version='0.2',
+    version='0.2.1',
     description='Small set of utilities to simplify writing Scrapy spiders.',
     long_description=LONG_DESC,
     author='Rolando Espinoza La fuente',
