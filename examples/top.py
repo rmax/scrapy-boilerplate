@@ -3,7 +3,6 @@
 Usage: scrapy runspider top.py
 
 """
-from inline_requests import inline_requests
 from scrapy_boilerplate import NewCrawlSpider, NewItem
 from pyquery import PyQuery
 from urlparse import urljoin
@@ -18,7 +17,6 @@ TopSpider = NewCrawlSpider('top', start_urls=[
 
 
 @TopSpider.rule(r'/questions/\d+/[\w\-]+$')
-@inline_requests
 def parse_question(spider, response):
     d = PyQuery(response.body)
     item = FeaturedItem(
