@@ -2,20 +2,23 @@
 
 Usage::
 
-    python run_scraper.py -h
+    python crawler.py -h
 
-    python run_scraper.py -l
+    python crawler.py -l
 
-    python run_scraper.py spider_one
+    python crawler.py spider_one
 
 """
-from scrapy_boilerplate import run_crawler, SpiderManager, ItemFactory
+from scrapy_boilerplate import (run_crawler, SpiderManager, NewItem,
+                                NewSpider, NewCrawlSpider)
 from scrapy.spider import BaseSpider
 
 
-ItemOne = ItemFactory('title url')
-ItemTwo = ItemFactory('name url')
-ItemThree = ItemFactory('data url')
+BaseItem = NewItem('spider url')
+
+ItemOne = NewItem('title', base_cls=BaseItem)
+ItemTwo = NewItem('name', base_cls=BaseItem)
+ItemThree = NewItem('data', base_cls=BaseItem)
 
 
 class SpiderOne(BaseSpider):
@@ -25,38 +28,31 @@ class SpiderOne(BaseSpider):
     def parse(self, response):
         return ItemOne(
             title='welcome to example.org',
+            spider=self.name,
             url=response.url,
         )
 
 
-class SpiderTwo(BaseSpider):
-    name = 'spider_two'
-    start_urls = ['http://example.net']
-
-    def parse(self, response):
-        return ItemTwo(
-            name='foo',
-            url=response.url,
-        )
+SpiderTwo = NewSpider('spider_two')
 
 
-class SpiderThree(BaseSpider):
-    name = 'spider_three'
-    start_urls = ['http://example.com']
+@SpiderTwo.scrape('http://example.net')
+def parse_net(spider, response):
+    return ItemTwo(
+        name='foo',
+        spider=spider.name,
+        url=response.url,
+    )
 
-    def parse(self, response):
-        return ItemThree(
-            data=[1,2,3],
-            url=response.url,
-        )
 
+SpiderThree = NewCrawlSpider('spider_three')
 
 
 if __name__ == '__main__':
     # register spiders classes in the spider manager so
     # the crawler knows which ones are available
     SpiderManager.register(SpiderOne)
-    #SpiderManager.register(SpiderTwo)
-    SpiderManager.register(SpiderThree)
+    SpiderManager.register(SpiderTwo)
+    #SpiderManager.register(SpiderThree)
 
     run_crawler()

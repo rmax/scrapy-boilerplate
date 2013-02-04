@@ -2,16 +2,18 @@
 
 Usage: scrapy runspider featured.py
 """
-from scrapy_boilerplate import spider_factory, ItemFactory
+from scrapy_boilerplate import NewSpider, NewItem
 from pyquery import PyQuery
 from urlparse import urljoin
 
 
-FeaturedItem = ItemFactory('title tags stats url')
+FeaturedItem = NewItem('title tags stats url')
+
+MySpider = NewSpider('featured')
 
 
-@spider_factory('http://www.stackoverflow.com/?tab=featured')
-def FeaturedSpider(response):
+@MySpider.scrape('http://www.stackoverflow.com/?tab=featured')
+def parse(spider, response):
     """Scrapes featured questions."""
     d = PyQuery(response.body)
     for summary in d('.question-summary'):
@@ -26,6 +28,7 @@ def FeaturedSpider(response):
                 'views': el.find('.views .mini-counts').text(),
             }
         )
+    spider.log("Finished extracting featured questions")
 
 
 if __name__ == '__main__':

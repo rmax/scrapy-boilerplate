@@ -9,7 +9,11 @@ It requires `Scrapy`_ `(>= 0.16)` and has been tested using `python 2.7`.
 Additionally, `PyQuery`_ is required to run the scripts in the `examples`_
 directory.
 
-.. note:: The code is highly experimental and should be used with caution.
+.. note::
+
+  The code is experimental, includes some magic under the hood and might be
+  hard to debug. If you are new to `Scrapy`_, don't use this code unless
+  you are ready to debug errors that nobody have seen before.
 
 
 -----------
@@ -25,20 +29,31 @@ Standard item definition:
 
   from scrapy.item import Item, Field
 
-  class MyItem(Item):
+  class BaseItem(Item):
+      url = Field()
+      crawled = Field()
+
+  class UserItem(BaseItem):
+      name = Field()
+      about = Field()
+      location = Field()
+
+  class StoryItem(BaseItem):
       title = Field()
       body = Field()
-      price = Field()
-      url = Field()
-
+      user = Field()
 
 Becomes:
 
 .. code:: python
 
-  from scrapy_boilerplate import ItemFactory
+  from scrapy_boilerplate import NewItem
 
-  MyItem = ItemFactory('title body price url')
+  BaseItem = NewItem('url crawled')
+
+  UserItem = NewItem('name about location', base_cls=BaseItem)
+
+  StoryItem = NewItem('title body user', base_cls=BaseItem)
 
 
 BaseSpider
@@ -52,7 +67,7 @@ Standard spider definition:
 
   class MySpider(BaseSpider):
       name = 'my_spider'
-      start_urls = ['http://example.com']
+      start_urls = ['http://example.com/latest']
 
       def parse(self, response):
           # do stuff
@@ -62,17 +77,19 @@ Becomes:
 
 .. code:: python
 
-  from scrapy_boilerplate import spider_factory
+  from scrapy_boilerplate import NewSpider
 
-  @spider_factory('http://example.com')
-  def MySpider(response):
+  MySpider = NewSpider('my_spider')
+
+  @MySpider.scrape('http://example.com/latest')
+  def parse(spider, response):
       # do stuff
 
 
 CrawlSpider
 ===========
 
-Standard spider definition:
+Standard crawl-spider definition:
 
 .. code:: python
 
@@ -81,7 +98,7 @@ Standard spider definition:
 
 
   class MySpider(CrawlSpider):
-      name = 'example.com'
+      name = 'my_spider'
       start_urls = ['http://example.com']
 
       rules = (
@@ -99,28 +116,26 @@ Becomes:
 
   from scrapy_boilerplate import NewCrawlSpider
 
-  MySpider = NewCrawlSpider('example.com')
+  MySpider = NewCrawlSpider('my_spider')
   MySpider.follow('category\.php')
 
   @MySpider.rule('item\.php')
-  def parse_item(response):
+  def parse_item(spider, response):
       # do stuff
 
 
 Running Helpers
 ===============
 
-Single-file spider:
+Single-spider running script:
 
 .. code:: python
 
   # file: my-spider.py
   # imports omitted ...
 
-
   class MySpider(BaseSpider):
       # spider code ...
-
 
   if __name__ == '__main__':
       from scrapy_boilerplate import run_spider
@@ -132,7 +147,7 @@ Single-file spider:
       run_spider(spider, custom_settings)
 
 
-Single-file project with standard crawl command line options:
+Multi-spider script with standard crawl command line options:
 
 .. code:: python
 
