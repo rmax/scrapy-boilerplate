@@ -10,7 +10,7 @@ from scrapy.commands.crawl import Command as CrawlCommand
 from scrapy.commands.list import Command as ListCommand
 from scrapy.contrib.spiders import Rule, CrawlSpider as _CrawlSpider
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.crawler import CrawlerProcess
+from scrapy.crawler import Crawler
 from scrapy.item import Item, Field
 from scrapy.settings import CrawlerSettings
 from scrapy.spider import BaseSpider as _BaseSpider
@@ -239,10 +239,11 @@ def run_spider(spider, settings=None):
 
     This function is suitable for standalone scripts.
     """
-    crawler = CrawlerProcess(_build_settings(settings))
-    crawler.install()
+    crawler = Crawler(_build_settings(settings))
+    #crawler = proc.create_crawler()
+    #crawler.install()
     crawler.configure()
-    log.start_from_crawler(crawler)
+    #log.start_from_crawler(crawler)
     crawler.crawl(spider)
     crawler.start()
 
@@ -270,7 +271,7 @@ def run_crawler(argv=None, settings=None):
     })
 
     crawler = CrawlerProcess(settings)
-    crawler.install()
+    #crawler.install()
 
     parser = optparse.OptionParser(formatter=optparse.TitledHelpFormatter())
     parser.add_option('-l', '--list', action='store_true',
